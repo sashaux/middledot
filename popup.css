@@ -92,7 +92,7 @@ input {
 .editing #grid td:not(.char) {
   border-style: dashed;
   border-color: var(--key-edge);
-  color: var(--muted);
+  color: var(--key-edge);
   cursor: pointer;
 }
 
@@ -100,7 +100,8 @@ input {
   background-color: var(--key-hover);
 }
 
-/* Плюс нарисован фоном, а не текстом: так он ровно по центру при любом шрифте */
+/* Плюс нарисован фоном, а не текстом: так он ровно по центру при любом шрифте.
+   Цвет берётся из color и совпадает с обводкой */
 .editing #grid td:empty {
   background-image:
     linear-gradient(currentColor, currentColor),
@@ -148,6 +149,10 @@ input {
   border-color: var(--accent);
   box-shadow: none;
   color: var(--on-drop);
+}
+
+.editing #grid td.drop-target:empty {
+  color: var(--accent);
 }
 
 /* Нижняя строка: [сообщение][✎], в режиме правки [↺][подсказка][Done] */
