@@ -37,6 +37,11 @@
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       user-select: none;
     }
+    button,
+    input {
+      font: inherit;
+      color: inherit;
+    }
     #grid {
       border-collapse: separate;
       border-spacing: 6px;
@@ -45,42 +50,98 @@
       width: 36px;
       height: 36px;
       padding: 0;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      font-size: 20px;
+      line-height: 1;
       text-align: center;
       vertical-align: middle;
     }
-    .char {
-      font-size: 20px;
-      line-height: 1;
+    #grid .char {
       cursor: pointer;
       background: var(--key);
-      border: 1px solid var(--key-edge);
-      border-radius: 8px;
+      border-color: var(--key-edge);
       box-shadow: 0 1px 0 var(--key-edge);
       transition: background-color .12s, border-color .12s, color .12s;
     }
-    .char:hover {
+    #grid .char:hover {
       background: var(--key-hover);
     }
-    .char:active,
-    .char.copied {
+    #grid .char:active,
+    #grid .char.copied {
       background: var(--accent);
       border-color: var(--accent);
       box-shadow: none;
       color: var(--on-accent);
     }
-    .char:focus-visible {
+    #grid td:focus-visible,
+    #grid td.drop-target,
+    #grid td:has(> .cell-input) {
       outline: 2px solid var(--focus);
       outline-offset: 1px;
     }
-    #message {
+    #grid .dragging {
+      opacity: .4;
+    }
+    /* Режим правки */
+    .editing #grid td:not(.char) {
+      border-style: dashed;
+      border-color: var(--key-edge);
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .editing #grid td:not(.char):hover {
+      background: var(--key-hover);
+    }
+    .editing #grid td:empty::after {
+      content: '+';
+      font-size: 16px;
+    }
+    .editing #grid .char {
+      cursor: grab;
+    }
+    .editing #grid .char:active {
+      background: var(--key-hover);
+      border-color: var(--key-edge);
+      color: var(--text);
+    }
+    .cell-input {
+      box-sizing: border-box;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 20px;
+      text-align: center;
+      user-select: text;
+    }
+    #footer,
+    #toolbar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       width: 0;
       min-width: calc(100% - 12px);
-      height: 24px;
       margin: 0 6px 6px;
+    }
+    #toolbar {
+      display: none;
+      justify-content: space-between;
+    }
+    .editing #toolbar {
+      display: flex;
+    }
+    #message {
+      flex: 1;
+      min-width: 0;
+      height: 24px;
+      padding: 0 8px;
       border-radius: 6px;
       font-size: 12px;
       line-height: 24px;
-      text-align: center;
       color: var(--muted);
       white-space: nowrap;
       overflow: hidden;
@@ -93,6 +154,46 @@
     }
     #message.error {
       background: var(--error);
+      color: var(--on-error);
+    }
+    button {
+      height: 24px;
+      padding: 0 10px;
+      border: 1px solid var(--key-edge);
+      border-radius: 6px;
+      background: var(--key);
+      font-size: 12px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: var(--key-hover);
+    }
+    button:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 1px;
+    }
+    #edit {
+      display: grid;
+      place-items: center;
+      flex: none;
+      width: 24px;
+      padding: 0;
+      color: var(--muted);
+    }
+    .editing #edit {
+      display: none;
+    }
+    #done {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--on-accent);
+    }
+    #done:hover {
+      filter: brightness(.96);
+    }
+    #reset.confirm {
+      background: var(--error);
+      border-color: var(--error);
       color: var(--on-error);
     }
   </style>
@@ -149,7 +250,19 @@
       <td></td>
     </tr>
   </table>
-  <div id="message"></div>
+  <div id="footer">
+    <div id="message"></div>
+    <button id="edit" type="button" title="Edit layout" aria-label="Edit layout">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 20l1.2-4.8L16 4.4l3.6 3.6L8.8 18.8z"/>
+        <path d="M13.6 6.8l3.6 3.6"/>
+      </svg>
+    </button>
+  </div>
+  <div id="toolbar">
+    <button id="reset" type="button">Reset to default</button>
+    <button id="done" type="button">Done</button>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>
