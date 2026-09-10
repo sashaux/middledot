@@ -2,91 +2,147 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>FastChar</title>
+  <meta name="color-scheme" content="light dark">
+  <title>middledot</title>
   <style>
+    :root {
+      --bg: #f2f2f4;
+      --key: #ffffff;
+      --key-edge: #dcdce1;
+      --key-hover: #e9e9ee;
+      --text: #1d1d1f;
+      --muted: #86868e;
+      --accent: #a2e4b8;
+      --on-accent: #0e3b20;
+      --error: #f5c6c6;
+      --on-error: #5a1515;
+      --focus: #4c8dff;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1b1b1e;
+        --key: #2b2b2f;
+        --key-edge: #3b3b41;
+        --key-hover: #36363b;
+        --text: #f1f1f3;
+        --muted: #8b8b94;
+      }
+    }
     body {
+      width: max-content;
       margin: 0;
-      font-family: sans-serif;
+      padding: 6px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      user-select: none;
     }
     #grid {
       border-collapse: separate;
-      border-spacing: 4px;
-      margin: 4px;
-      width: max-content;
+      border-spacing: 6px;
     }
     #grid td {
-      width: 30px;
-      height: 30px;
+      width: 36px;
+      height: 36px;
+      padding: 0;
       text-align: center;
+      vertical-align: middle;
     }
     .char {
-      padding: 4px;
       font-size: 20px;
+      line-height: 1;
       cursor: pointer;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      background: #fff;
+      background: var(--key);
+      border: 1px solid var(--key-edge);
+      border-radius: 8px;
+      box-shadow: 0 1px 0 var(--key-edge);
+      transition: background-color .12s, border-color .12s, color .12s;
     }
     .char:hover {
-      background: #f0f0f0;
+      background: var(--key-hover);
     }
-    .char:active {
-      background: #a2e4b8;
+    .char:active,
+    .char.copied {
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: none;
+      color: var(--on-accent);
+    }
+    .char:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 1px;
     }
     #message {
-      text-align: center;
+      width: 0;
+      min-width: calc(100% - 12px);
+      height: 24px;
+      margin: 0 6px 6px;
+      border-radius: 6px;
       font-size: 12px;
-      padding-top: 4px;
-      height: 16px;
+      line-height: 24px;
+      text-align: center;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: background-color .15s, color .15s;
+    }
+    #message.ok {
+      background: var(--accent);
+      color: var(--on-accent);
+    }
+    #message.error {
+      background: var(--error);
+      color: var(--on-error);
     }
   </style>
 </head>
 <body>
   <table id="grid">
     <tr>
-      <td class="char">«</td>
-      <td class="char">»</td>
+      <td class="char" data-name="Left guillemet">«</td>
+      <td class="char" data-name="Right guillemet">»</td>
       <td></td>
       <td></td>
       <td></td>
     </tr>
     <tr>
-      <td class="char">→</td>
-      <td class="char">←</td>
-      <td class="char">↑</td>
-      <td class="char">↓</td>
+      <td class="char" data-name="Right arrow">→</td>
+      <td class="char" data-name="Left arrow">←</td>
+      <td class="char" data-name="Up arrow">↑</td>
+      <td class="char" data-name="Down arrow">↓</td>
       <td></td>
     </tr>
     <tr>
-      <td class="char">~</td>
-      <td class="char">≈</td>
-      <td class="char">≠</td>
-      <td class="char">≥</td>
-      <td class="char">≤</td>
+      <td class="char" data-name="Tilde">~</td>
+      <td class="char" data-name="Almost equal">≈</td>
+      <td class="char" data-name="Not equal">≠</td>
+      <td class="char" data-name="Greater or equal">≥</td>
+      <td class="char" data-name="Less or equal">≤</td>
     </tr>
     <tr>
-      <td class="char">₽</td>
-      <td class="char">$</td>
-      <td class="char">€</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td class="char">×</td>
-      <td class="char">−</td>
-      <td class="char">±</td>
+      <td class="char" data-name="Ruble">₽</td>
+      <td class="char" data-name="Dollar">$</td>
+      <td class="char" data-name="Euro">€</td>
       <td></td>
       <td></td>
     </tr>
     <tr>
-      <td class="char">–</td>
-      <td class="char">—</td>
-      <td class="char">•</td>
-      <td class="char">©</td>
+      <td class="char" data-name="Multiplication">×</td>
+      <td class="char" data-name="Minus">−</td>
+      <td class="char" data-name="Plus-minus">±</td>
+      <td></td>
       <td></td>
     </tr>
     <tr>
-      <td class="char">ツ</td>
+      <td class="char" data-name="En dash">–</td>
+      <td class="char" data-name="Em dash">—</td>
+      <td class="char" data-name="Bullet">•</td>
+      <td class="char" data-name="Copyright">©</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td class="char" data-name="Katakana tsu">ツ</td>
       <td></td>
       <td></td>
       <td></td>

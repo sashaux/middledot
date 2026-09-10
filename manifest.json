@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "FastChar",
+  "name": "middledot",
   "version": "1.0.0",
   "description": "Quickly copy special characters to the clipboard.",
   "action": {
     "default_popup": "popup.html",
-    "default_title": "FastChar"
+    "default_title": "middledot"
   },
   "permissions": [
     "clipboardWrite"
