@@ -2,98 +2,79 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>FastChar</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-    }
-    #grid {
-      border-collapse: separate;
-      border-spacing: 4px;
-      margin: 4px;
-      width: max-content;
-    }
-    #grid td {
-      width: 30px;
-      height: 30px;
-      text-align: center;
-    }
-    .char {
-      padding: 4px;
-      font-size: 20px;
-      cursor: pointer;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      background: #fff;
-    }
-    .char:hover {
-      background: #f0f0f0;
-    }
-    .char:active {
-      background: #a2e4b8;
-    }
-    #message {
-      text-align: center;
-      font-size: 12px;
-      padding-top: 4px;
-      height: 16px;
-    }
-  </style>
+  <meta name="color-scheme" content="light dark">
+  <title>middledot</title>
+  <link rel="stylesheet" href="popup.css">
 </head>
 <body>
+  <!-- Раскладка по умолчанию: popup.js берёт символы и их названия отсюда -->
   <table id="grid">
     <tr>
-      <td class="char">«</td>
-      <td class="char">»</td>
+      <td class="char" data-name="Left guillemet">«</td>
+      <td class="char" data-name="Right guillemet">»</td>
       <td></td>
       <td></td>
       <td></td>
     </tr>
     <tr>
-      <td class="char">→</td>
-      <td class="char">←</td>
-      <td class="char">↑</td>
-      <td class="char">↓</td>
+      <td class="char" data-name="Right arrow">→</td>
+      <td class="char" data-name="Left arrow">←</td>
+      <td class="char" data-name="Up arrow">↑</td>
+      <td class="char" data-name="Down arrow">↓</td>
       <td></td>
     </tr>
     <tr>
-      <td class="char">~</td>
-      <td class="char">≈</td>
-      <td class="char">≠</td>
-      <td class="char">≥</td>
-      <td class="char">≤</td>
+      <td class="char" data-name="Tilde">~</td>
+      <td class="char" data-name="Almost equal">≈</td>
+      <td class="char" data-name="Not equal">≠</td>
+      <td class="char" data-name="Greater or equal">≥</td>
+      <td class="char" data-name="Less or equal">≤</td>
     </tr>
     <tr>
-      <td class="char">₽</td>
-      <td class="char">$</td>
-      <td class="char">€</td>
+      <td class="char" data-name="Dollar">$</td>
+      <td class="char" data-name="Euro">€</td>
       <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td class="char">×</td>
-      <td class="char">−</td>
-      <td class="char">±</td>
       <td></td>
       <td></td>
     </tr>
     <tr>
-      <td class="char">–</td>
-      <td class="char">—</td>
-      <td class="char">•</td>
-      <td class="char">©</td>
+      <td class="char" data-name="Multiplication">×</td>
+      <td class="char" data-name="Minus">−</td>
+      <td class="char" data-name="Plus-minus">±</td>
+      <td></td>
       <td></td>
     </tr>
     <tr>
-      <td class="char">ツ</td>
+      <td class="char" data-name="En dash">–</td>
+      <td class="char" data-name="Em dash">—</td>
+      <td class="char" data-name="Bullet">•</td>
+      <td class="char" data-name="Middle dot">·</td>
       <td></td>
+    </tr>
+    <tr>
+      <td class="char" data-name="Katakana tsu">ツ</td>
+      <td class="char" data-name="Copyright">©</td>
       <td></td>
       <td></td>
       <td></td>
     </tr>
   </table>
-  <div id="message"></div>
-  <script src="popup.js"></script>
+  <div id="footer">
+    <button id="reset" class="icon" type="button" title="Reset to default" aria-label="Reset to default">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 16A8 8 0 1 0 5 8"/>
+        <path d="M8.8 6.6 5 8l-.7-3.9"/>
+      </svg>
+    </button>
+    <div id="message"></div>
+    <button id="edit" class="icon" type="button" title="Edit layout" aria-label="Edit layout">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 20l1.2-4.8L16 4.4l3.6 3.6L8.8 18.8z"/>
+        <path d="M13.6 6.8l3.6 3.6"/>
+      </svg>
+    </button>
+    <button id="done" type="button">Done</button>
+  </div>
+  <script type="module" src="popup.js"></script>
 </body>
 </html>
