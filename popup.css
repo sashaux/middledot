@@ -109,7 +109,9 @@ input {
   border-color: var(--accent);
   box-shadow: none;
   color: var(--on-drop);
-  outline: none;
+  /* Прозрачный контур не виден, но проявляется в режиме высокой контрастности Windows */
+  outline: 2px solid transparent;
+  outline-offset: 1px;
 }
 
 #grid td:where(:empty:focus-visible),
@@ -129,6 +131,7 @@ input {
 :where(.editing) #grid td:where(.dragging) {
   background-color: transparent;
   border-style: dashed;
+  border-color: var(--key-edge);
   box-shadow: none;
   color: var(--muted);
 }
