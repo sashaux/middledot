@@ -250,11 +250,10 @@ function requestReset() {
     armReset();
     return;
   }
-  disarmReset();
   closeEditor(false);
   state.layout = [...DEFAULT_LAYOUT];
   clearSavedLayout();
-  renderGrid();
+  setEditing(false);
   flash(TEXT.resetDone, 'ok');
 }
 

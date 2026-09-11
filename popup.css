@@ -63,46 +63,31 @@ input {
   transition: background-color .12s, border-color .12s, color .12s;
 }
 
-#grid .char {
+/* Состояния ячейки идут по возрастанию приоритета. Режимы и состояния обёрнуты
+   в :where(), поэтому специфичность у всех одна и при совпадении побеждает правило ниже */
+
+/* Клавиша с символом */
+#grid td:where(.char) {
   cursor: pointer;
   background-color: var(--key);
   border-color: var(--key-edge);
   box-shadow: 0 1px 0 var(--key-edge);
 }
 
-#grid .char:hover {
+#grid td:where(.char:hover) {
   background-color: var(--key-hover);
 }
 
-#grid .char:active,
-#grid .char.copied {
-  background-color: var(--accent);
-  border-color: var(--accent);
-  box-shadow: none;
-  color: var(--on-accent);
-}
-
-#grid td:focus-visible,
-#grid td:has(> .cell-input) {
-  outline: 2px solid var(--focus);
-  outline-offset: 1px;
-}
-
-/* Режим правки */
-.editing #grid td:not(.char) {
+/* Режим правки: пустое место с плюсом. Плюс нарисован фоном, а не текстом, чтобы стоять
+   ровно по центру при любом шрифте; цвет берёт из color и совпадает с обводкой */
+:where(.editing) #grid td:where(:not(.char)) {
   border-style: dashed;
   border-color: var(--key-edge);
   color: var(--key-edge);
   cursor: pointer;
 }
 
-.editing #grid td:not(.char):hover {
-  background-color: var(--key-hover);
-}
-
-/* Плюс нарисован фоном, а не текстом: так он ровно по центру при любом шрифте.
-   Цвет берётся из color и совпадает с обводкой */
-.editing #grid td:empty {
+:where(.editing) #grid td:where(:empty) {
   background-image:
     linear-gradient(currentColor, currentColor),
     linear-gradient(currentColor, currentColor);
@@ -111,16 +96,47 @@ input {
   background-repeat: no-repeat;
 }
 
-.editing #grid .char {
+:where(.editing) #grid td:where(.char) {
   cursor: grab;
 }
 
-.editing #grid .char:active {
-  background-color: var(--key-hover);
-  border-color: var(--key-edge);
-  color: var(--text);
+/* Одна подсветка для фокуса, открытого поля ввода, наведения в режиме правки
+   и цели перетаскивания: зелёная подложка и рамка, плюс цветом рамки */
+#grid td:where(:focus-visible, :has(> .cell-input)),
+:where(.editing) #grid td:where(:hover, .drop-target) {
+  background-color: var(--drop);
+  border-style: solid;
+  border-color: var(--accent);
+  box-shadow: none;
+  color: var(--on-drop);
+  /* Прозрачный контур не виден, но проявляется в режиме высокой контрастности Windows */
+  outline: 2px solid transparent;
+  outline-offset: 1px;
 }
 
+#grid td:where(:empty:focus-visible),
+:where(.editing) #grid td:where(:empty:hover, .drop-target:empty) {
+  color: var(--accent);
+}
+
+/* Нажатие и только что скопированный символ в обычном режиме */
+:where(body:not(.editing)) #grid td:where(.char:active, .copied) {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: none;
+  color: var(--on-accent);
+}
+
+/* Исходная ячейка при перетаскивании выглядит освобождающимся местом */
+:where(.editing) #grid td:where(.dragging) {
+  background-color: transparent;
+  border-style: dashed;
+  border-color: var(--key-edge);
+  box-shadow: none;
+  color: var(--muted);
+}
+
+/* Поле ввода в ячейке */
 .cell-input {
   box-sizing: border-box;
   width: 36px;
@@ -133,26 +149,6 @@ input {
   font-size: 20px;
   text-align: center;
   user-select: text;
-}
-
-/* Перетаскивание: исходная ячейка выглядит освобождающимся местом, цель — зелёной подложкой */
-.editing #grid td.char.dragging {
-  background-color: transparent;
-  border-style: dashed;
-  box-shadow: none;
-  color: var(--muted);
-}
-
-.editing #grid td.drop-target {
-  background-color: var(--drop);
-  border-style: solid;
-  border-color: var(--accent);
-  box-shadow: none;
-  color: var(--on-drop);
-}
-
-.editing #grid td.drop-target:empty {
-  color: var(--accent);
 }
 
 /* Нижняя строка: [сообщение][✎], в режиме правки [↺][подсказка][Done] */
@@ -220,18 +216,10 @@ button:focus-visible {
   color: var(--muted);
 }
 
-#reset,
-#done,
+/* ✎ виден в обычном режиме, ↺ и Done — только в режиме правки */
+body:not(.editing) :is(#reset, #done),
 .editing #edit {
   display: none;
-}
-
-.editing #reset {
-  display: grid;
-}
-
-.editing #done {
-  display: block;
 }
 
 #done {
