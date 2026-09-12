@@ -1,0 +1,27 @@
+Summary (95/132)
+Special characters, one click away: « » – — · → ≠ ± ©. Copy instantly and arrange your own set.
+
+Description
+middledot keeps the characters missing from your keyboard a click away.
+
+Open the popup, click a character — it’s already in your clipboard. Paste it anywhere.
+
+What’s inside
+• Quotes, apostrophe and dashes: « » „ “ ” ’ – —
+• Arrows: ← → ↑ ↓
+• Math: ~ ≈ ≠ ≤ ≥ × − ± °
+• And more: $ € • · © ツ
+
+Make it yours
+• Click the pencil to edit the grid
+• Click any cell and type a character — emoji too
+• Drag characters to rearrange them
+• Reset to the default set with two clicks
+Your layout is saved in your browser.
+
+Small details
+• Hover over a character to see its name and Unicode code point, so an en dash never passes for a minus
+• Works from the keyboard: Tab to move, Enter to copy
+• Light and dark themes follow your system
+
+No accounts, no tracking, no network requests. The only permission it asks for is writing to the clipboard.
