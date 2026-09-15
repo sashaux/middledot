@@ -1,0 +1,11 @@
+Single purpose description (297/1000)
+middledot gives quick access to special characters that are missing from the keyboard: quotes, dashes, arrows, math signs and a few others. The user opens the popup and clicks a character to copy it to the clipboard. The user can also choose which characters appear in the grid and rearrange them.
+
+Permission justification: clipboardWrite (330/1000)
+Copying a character to the clipboard is the extension’s core function. When the user clicks a character in the popup, the extension writes that character to the clipboard so it can be pasted anywhere. The clipboard is written only in response to a user click. The extension never reads the clipboard and has no background scripts.
+
+Remote code
+No, I am not using remote code.
+
+Data usage
+No data types collected. All three certifications checked.
