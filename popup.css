@@ -8,8 +8,8 @@
   --muted: #86868e;
   --accent: #a2e4b8;
   --on-accent: #0e3b20;
-  --drop: color-mix(in srgb, var(--accent) 30%, var(--key));
-  --on-drop: var(--on-accent);
+  --highlight: color-mix(in srgb, var(--accent) 30%, var(--key));
+  --on-highlight: var(--on-accent);
   --error: #f5c6c6;
   --on-error: #5a1515;
   --focus: #4c8dff;
@@ -23,21 +23,30 @@
     --key-hover: #36363b;
     --text: #f1f1f3;
     --muted: #8b8b94;
-    --on-drop: var(--text);
+    --on-highlight: var(--text);
   }
+}
+
+/* Размеры: связанные значения меняются только вместе. Нижняя строка отступает
+   по бокам на --gap, как клавиши от края сетки, поэтому стоит с ними вровень */
+:root {
+  --gap: 6px;      /* промежутки между клавишами и кнопками, поля попапа */
+  --cell: 36px;    /* клавиша без рамки; поле ввода такое же, чтобы ячейка не прыгала */
+  --control: 24px; /* высота кнопок и строки сообщения; кнопки-иконки такой же ширины */
 }
 
 /* Основа */
 body {
   width: max-content;
   margin: 0;
-  padding: 6px;
+  padding: var(--gap);
   background: var(--bg);
   color: var(--text);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   user-select: none;
 }
 
+/* Кнопки и поле ввода наследуют шрифт: размер задают нижняя строка и ячейка */
 button,
 input {
   font: inherit;
@@ -47,12 +56,12 @@ input {
 /* Сетка символов. Ячейки остаются table-cell: display: flex на td ломает таблицу */
 #grid {
   border-collapse: separate;
-  border-spacing: 6px;
+  border-spacing: var(--gap);
 }
 
 #grid td {
-  width: 36px;
-  height: 36px;
+  width: var(--cell);
+  height: var(--cell);
   padding: 0;
   border: 1px solid transparent;
   border-radius: 8px;
@@ -76,6 +85,14 @@ input {
 
 #grid td:where(.char:hover) {
   background-color: var(--key-hover);
+}
+
+/* В режиме высокой контрастности прозрачная рамка становится видимой,
+   а пустым местам в обычном режиме она не нужна */
+@media (forced-colors: active) {
+  :where(body:not(.editing)) #grid td:where(:not(.char)) {
+    border-color: Canvas;
+  }
 }
 
 /* Режим правки: пустое место с плюсом. Плюс нарисован фоном, а не текстом, чтобы стоять
@@ -104,11 +121,11 @@ input {
    и цели перетаскивания: зелёная подложка и рамка, плюс цветом рамки */
 #grid td:where(:focus-visible, :has(> .cell-input)),
 :where(.editing) #grid td:where(:hover, .drop-target) {
-  background-color: var(--drop);
+  background-color: var(--highlight);
   border-style: solid;
   border-color: var(--accent);
   box-shadow: none;
-  color: var(--on-drop);
+  color: var(--on-highlight);
   /* Прозрачный контур не виден, но проявляется в режиме высокой контрастности Windows */
   outline: 2px solid transparent;
   outline-offset: 1px;
@@ -127,6 +144,16 @@ input {
   color: var(--on-accent);
 }
 
+/* Подпись под только что скопированным символом: вместе с ним должна помещаться
+   в --cell по высоте, иначе строка сетки станет выше */
+:where(body:not(.editing)) #grid td:where(.copied)::after {
+  /* Подпись только для глаз: скринридеру копирование объявляет #status */
+  content: "Copied" / "";
+  display: block;
+  margin-top: 2px;
+  font-size: 9px;
+}
+
 /* Исходная ячейка при перетаскивании выглядит освобождающимся местом */
 :where(.editing) #grid td:where(.dragging) {
   background-color: transparent;
@@ -139,14 +166,13 @@ input {
 /* Поле ввода в ячейке */
 .cell-input {
   box-sizing: border-box;
-  width: 36px;
-  height: 36px;
+  width: var(--cell);
+  height: var(--cell);
   padding: 0;
   border: 0;
   outline: none;
   background: transparent;
   color: var(--text);
-  font-size: 20px;
   text-align: center;
   user-select: text;
 }
@@ -155,21 +181,20 @@ input {
 #footer {
   display: flex;
   align-items: center;
-  gap: 6px;
-  /* Ширину задаёт сетка: длинный текст сообщения не должен раздвигать попап */
-  width: 0;
-  min-width: calc(100% - 12px);
-  margin: 0 6px 6px;
+  gap: var(--gap);
+  margin: 0 var(--gap) var(--gap);
+  font-size: 12px;
 }
 
 #message {
   flex: 1;
   min-width: 0;
-  height: 24px;
+  /* Ширину попапа задают сетка и кнопки, а длинный текст сообщения её не раздвигает */
+  contain: inline-size;
+  height: var(--control);
   padding: 0 8px;
   border-radius: 6px;
-  font-size: 12px;
-  line-height: 24px;
+  line-height: var(--control);
   color: var(--muted);
   white-space: nowrap;
   overflow: hidden;
@@ -187,14 +212,27 @@ input {
   color: var(--on-error);
 }
 
+/* Текст только для скринридеров */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 /* Кнопки */
 button {
-  height: 24px;
+  flex: none;
+  height: var(--control);
   padding: 0 10px;
   border: 1px solid var(--key-edge);
   border-radius: 6px;
   background-color: var(--key);
-  font-size: 12px;
   cursor: pointer;
 }
 
@@ -210,8 +248,7 @@ button:focus-visible {
 .icon {
   display: grid;
   place-items: center;
-  flex: none;
-  width: 24px;
+  width: var(--control);
   padding: 0;
   color: var(--muted);
 }
@@ -223,7 +260,6 @@ body:not(.editing) :is(#reset, #done),
 }
 
 #done {
-  flex: none;
   background-color: var(--accent);
   border-color: var(--accent);
   color: var(--on-accent);

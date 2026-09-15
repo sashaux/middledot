@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="color-scheme" content="light dark">
@@ -8,7 +8,7 @@
 </head>
 <body>
   <!-- Раскладка по умолчанию: popup.js берёт символы и их названия отсюда -->
-  <table id="grid">
+  <table id="grid" role="presentation">
     <tr>
       <td class="char" data-name="Left guillemet">«</td>
       <td class="char" data-name="Right guillemet">»</td>
@@ -67,6 +67,7 @@
       </svg>
     </button>
     <div id="message"></div>
+    <div id="status" class="visually-hidden" role="status"></div>
     <button id="edit" class="icon" type="button" title="Edit layout" aria-label="Edit layout">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M4 20l1.2-4.8L16 4.4l3.6 3.6L8.8 18.8z"/>
